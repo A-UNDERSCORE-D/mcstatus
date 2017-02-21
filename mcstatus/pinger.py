@@ -139,8 +139,18 @@ class PingResponse:
 
         if "description" not in raw:
             raise ValueError("Invalid status object (no 'description' value)")
-        self.description = raw["description"]
-        self.description_clean = re.sub(r'\u00A7.', '', raw["description"])
+        # for newer versions of minecraft
+
+        if type(raw["description"]) is str:
+            self.description = raw["description"]
+            self.description_clean = re.sub(r'\u00A7.', '', raw["description"])
+
+        elif type(raw["description"]) is dict:
+            self.description = raw["description"]["text"]
+            self.description_clean = re.sub(r'\u00A7.', '', raw["description"]["text"])
+
+        else:
+            raise ValueError("Invalid status object (unknown 'description' type)")
 
         if "favicon" in raw:
             self.favicon = raw["favicon"]
