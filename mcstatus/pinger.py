@@ -141,16 +141,18 @@ class PingResponse:
             raise ValueError("Invalid status object (no 'description' value)")
         # for newer versions of minecraft
 
-        if type(raw["description"]) is str:
+        if isinstance(raw["description"], string_types):
             self.description = raw["description"]
             self.description_clean = re.sub(r'\u00A7.', '', raw["description"])
 
-        elif type(raw["description"]) is dict:
+        elif isinstance(raw["description"], dict):
             self.description = raw["description"]["text"]
-            self.description_clean = re.sub(r'\u00A7.', '', raw["description"]["text"])
+            self.description_clean = re.sub(r'\u00A7.', '',
+                                            raw["description"]["text"])
 
         else:
-            raise ValueError("Invalid status object (unknown 'description' type)")
+            raise ValueError("Invalid status object "
+                             "(unknown 'description' type)")
 
         if "favicon" in raw:
             self.favicon = raw["favicon"]
